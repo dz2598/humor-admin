@@ -30,7 +30,7 @@ drop policy if exists "Superadmins can read all votes" on public.votes;
 create policy "Superadmins can read all votes" on public.votes
 for select to authenticated using (public.is_superadmin());
 
--- Replace the email, then run this line to grant YOUR account access.
+-- Grant the project owner superadmin access.
 update public.profiles
 set is_superadmin = true
-where id = (select id from auth.users where email = 'YOUR_GOOGLE_EMAIL_HERE');
+where id = (select id from auth.users where email = 'dz2598@columbia.edu');
