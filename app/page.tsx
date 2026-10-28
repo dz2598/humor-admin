@@ -15,8 +15,6 @@ export default async function Dashboard() {
   ]);
   const memeRows = (memes || []) as Row[];
   const voteRows = (votes || []) as Row[];
-  const ups = voteRows.filter(v => value(v.vote_value) > 0).length;
-  const downs = voteRows.filter(v => value(v.vote_value) < 0).length;
   const scores = new Map<string, { up: number; down: number }>();
   voteRows.forEach(v => {
     const id = String(v.meme_id); const score = scores.get(id) || { up: 0, down: 0 };
@@ -27,14 +25,17 @@ export default async function Dashboard() {
   const ranked = [...scores.entries()].sort((a, b) => (b[1].up - b[1].down) - (a[1].up - a[1].down));
   const bestId = ranked[0]?.[0];
   const best = memeRows.find(m => String(m.id) === bestId);
+  const averageEngagement = memeRows.length ? voteRows.length / memeRows.length : 0;
+  const activeMemes = new Set(voteRows.map(v => String(v.meme_id))).size;
+  const activeRate = memeRows.length ? Math.round(activeMemes / memeRows.length * 100) : 0;
   const name = [profile.first_name, profile.last_name].filter(Boolean).join(" ");
   return <AdminShell active="/" name={name}>
     <header className="page-header"><div><p className="eyebrow">LIVE DATABASE</p><h1>Archive overview</h1><p>Signals from the Campus LOL evidence collection.</p></div><Link className="primary-button" href="/memes/new">+ New meme record</Link></header>
     <section className="stats-grid">
       <article><span>Profiles</span><strong>{profiles?.length || 0}</strong><small>registered identities</small></article>
       <article><span>Meme records</span><strong>{memeRows.length}</strong><small>stored evidence</small></article>
-      <article><span>Upvotes</span><strong>{ups}</strong><small>positive signals</small></article>
-      <article><span>Approval rate</span><strong>{ups + downs ? Math.round(ups / (ups + downs) * 100) : 0}%</strong><small>{downs} downvotes recorded</small></article>
+      <article><span>Avg. engagement / meme</span><strong>{averageEngagement.toFixed(1)}</strong><small>{voteRows.length} interactions across all memes</small></article>
+      <article><span>Active memes</span><strong>{activeRate}%</strong><small>{activeMemes} of {memeRows.length} received interaction</small></article>
     </section>
     <section className="dashboard-grid">
       <article className="panel"><div className="panel-heading"><div><p className="eyebrow">TOP SIGNAL</p><h2>Most approved evidence</h2></div><Link href="/votes">View vote log →</Link></div>

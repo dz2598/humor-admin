@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
+import { getAdminResource } from "@/lib/admin-resources";
 
 function text(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -41,4 +42,46 @@ export async function deleteMeme(id: number) {
   const { error } = await supabase.from("memes").delete().eq("id", id);
   if (error) throw new Error(error.message);
   revalidatePath("/"); revalidatePath("/memes"); revalidatePath("/votes");
+}
+
+function resourcePayload(slug: string, formData: FormData) {
+  const resource = getAdminResource(slug);
+  if (!resource || resource.mode === "read") throw new Error("This resource is read only.");
+  return Object.fromEntries(resource.fields.map(field => {
+    const raw = formData.get(field.name);
+    if (field.kind === "checkbox") return [field.name, raw === "on"];
+    if (field.kind === "number") return [field.name, raw === "" || raw === null ? null : Number(raw)];
+    const normalized = typeof raw === "string" ? raw.trim() : "";
+    return [field.name, normalized || null];
+  }));
+}
+
+export async function createResource(slug: string, formData: FormData) {
+  const resource = getAdminResource(slug);
+  if (!resource || resource.mode !== "crud") throw new Error("This resource cannot be created.");
+  const { supabase } = await requireAdmin();
+  const { error } = await supabase.from(resource.table).insert(resourcePayload(slug, formData));
+  if (error) throw new Error(error.message);
+  revalidatePath(`/observability/${slug}`);
+  redirect(`/observability/${slug}`);
+}
+
+export async function updateResource(slug: string, id: number, formData: FormData) {
+  const resource = getAdminResource(slug);
+  if (!resource || resource.mode === "read") throw new Error("This resource cannot be updated.");
+  const { supabase } = await requireAdmin();
+  const payload = { ...resourcePayload(slug, formData), updated_at: new Date().toISOString() };
+  const { error } = await supabase.from(resource.table).update(payload).eq("id", id);
+  if (error) throw new Error(error.message);
+  revalidatePath(`/observability/${slug}`);
+  redirect(`/observability/${slug}`);
+}
+
+export async function deleteResource(slug: string, id: number) {
+  const resource = getAdminResource(slug);
+  if (!resource || resource.mode !== "crud") throw new Error("This resource cannot be deleted.");
+  const { supabase } = await requireAdmin();
+  const { error } = await supabase.from(resource.table).delete().eq("id", id);
+  if (error) throw new Error(error.message);
+  revalidatePath(`/observability/${slug}`);
 }

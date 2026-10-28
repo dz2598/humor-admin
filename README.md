@@ -18,3 +18,7 @@ An independent administrator website for the Campus LOL meme database. It shares
 4. Run `npm ci`, then `npm run dev`.
 
 For Vercel, add the same two public Supabase variables and add the deployed `/auth/callback` URL to Supabase Auth redirect URLs.
+
+## Week 7 observability setup
+
+Run `supabase/week-7-observability.sql` in the same Supabase project's SQL Editor. It creates the prompt, request, model, response, access-control, and evaluation tables used by the observability pages, adds superadmin RLS policies, seeds the active Campus LOL generation configuration, and permits superadmins to manage images in the existing `memes` storage bucket.
