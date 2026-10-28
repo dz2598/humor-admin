@@ -70,7 +70,9 @@ export async function updateResource(slug: string, id: number, formData: FormDat
   const resource = getAdminResource(slug);
   if (!resource || resource.mode === "read") throw new Error("This resource cannot be updated.");
   const { supabase } = await requireAdmin();
-  const payload = { ...resourcePayload(slug, formData), updated_at: new Date().toISOString() };
+  const payload = resource.table === "prompt_chain_steps"
+    ? resourcePayload(slug, formData)
+    : { ...resourcePayload(slug, formData), updated_at: new Date().toISOString() };
   const { error } = await supabase.from(resource.table).update(payload).eq("id", id);
   if (error) throw new Error(error.message);
   revalidatePath(`/observability/${slug}`);

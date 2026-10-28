@@ -24,13 +24,25 @@ export type AdminResource = {
 export const adminResources: AdminResource[] = [
   {
     slug: "prompt-chains", table: "prompt_chains", title: "Prompt chains", singular: "prompt chain",
-    description: "Read the prompt pipelines used to produce AI media.", eyebrow: "PIPELINE OBSERVABILITY", mode: "read",
-    columns: [{ name: "name", label: "Chain" }, { name: "description", label: "Description" }, { name: "status", label: "Status" }, { name: "created_at", label: "Created" }], fields: [],
+    description: "Edit the prompt pipelines used to produce AI media.", eyebrow: "PIPELINE CONTROL", mode: "update",
+    columns: [{ name: "name", label: "Chain" }, { name: "description", label: "Description" }, { name: "status", label: "Status" }, { name: "created_at", label: "Created" }],
+    fields: [
+      { name: "name", label: "Chain name", kind: "text", required: true },
+      { name: "description", label: "Description", kind: "textarea", help: "Explain what this pipeline is designed to generate." },
+      { name: "status", label: "Status", kind: "text", required: true, help: "Use active, draft, or archived." },
+    ],
   },
   {
     slug: "prompt-chain-steps", table: "prompt_chain_steps", title: "Prompt chain steps", singular: "prompt step",
-    description: "Inspect the ordered instructions inside every prompt chain.", eyebrow: "PIPELINE OBSERVABILITY", mode: "read",
-    columns: [{ name: "prompt_chain_id", label: "Chain ID" }, { name: "step_order", label: "Order" }, { name: "name", label: "Step" }, { name: "system_prompt", label: "System prompt" }, { name: "user_prompt_template", label: "User template" }], fields: [],
+    description: "Edit the ordered instructions inside every prompt chain.", eyebrow: "PIPELINE CONTROL", mode: "update",
+    columns: [{ name: "prompt_chain_id", label: "Chain ID" }, { name: "step_order", label: "Order" }, { name: "name", label: "Step" }, { name: "system_prompt", label: "System prompt" }, { name: "user_prompt_template", label: "User template" }],
+    fields: [
+      { name: "prompt_chain_id", label: "Prompt chain ID", kind: "number", required: true, help: "The chain this step belongs to." },
+      { name: "step_order", label: "Step order", kind: "number", required: true, help: "Steps run from the lowest number to the highest." },
+      { name: "name", label: "Step name", kind: "text", required: true },
+      { name: "system_prompt", label: "System prompt", kind: "textarea", help: "The instruction sent to the model for this stage." },
+      { name: "user_prompt_template", label: "User template", kind: "textarea", help: "Keep placeholders such as {{prompt}} and {{image_analysis}} intact." },
+    ],
   },
   {
     slug: "prompt-chain-mix", table: "prompt_chain_mix", title: "Prompt chain mix", singular: "mix allocation",
