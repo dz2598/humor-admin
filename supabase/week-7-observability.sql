@@ -200,8 +200,8 @@ values ('Campus relatability', 'A joke grounded in a recognizable college-life s
 on conflict (term) do nothing;
 
 insert into public.allowed_signup_domains (domain, enabled)
-values ('columbia.edu', true)
-on conflict (domain) do nothing;
+values ('*', true)
+on conflict (domain) do update set enabled = true;
 
 insert into public.whitelisted_emails (email, notes, enabled)
 values ('dz2598@columbia.edu', 'Project administrator', true)

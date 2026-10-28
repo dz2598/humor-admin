@@ -87,3 +87,13 @@ export async function deleteResource(slug: string, id: number) {
   if (error) throw new Error(error.message);
   revalidatePath(`/observability/${slug}`);
 }
+
+export async function openSignupToEveryone() {
+  const { supabase } = await requireAdmin();
+  const { error } = await supabase
+    .from("allowed_signup_domains")
+    .upsert({ domain: "*", enabled: true }, { onConflict: "domain" });
+  if (error) throw new Error(error.message);
+  revalidatePath("/observability/signup-domains");
+  redirect("/observability/signup-domains");
+}

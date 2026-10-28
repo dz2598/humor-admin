@@ -85,10 +85,10 @@ export const adminResources: AdminResource[] = [
     columns: [{ name: "generation_request_id", label: "Request ID" }, { name: "step_order", label: "Step" }, { name: "step_name", label: "Stage" }, { name: "model_id", label: "Model ID" }, { name: "response_text", label: "Response" }, { name: "latency_ms", label: "Latency ms" }, { name: "input_tokens", label: "Input tokens" }, { name: "output_tokens", label: "Output tokens" }, { name: "created_at", label: "Created" }], fields: [],
   },
   {
-    slug: "signup-domains", table: "allowed_signup_domains", title: "Allowed signup domains", singular: "signup domain",
-    description: "Control which e-mail domains may create accounts.", eyebrow: "ACCESS CONTROL", mode: "crud",
+    slug: "signup-domains", table: "allowed_signup_domains", title: "Signup access", singular: "signup rule",
+    description: "Use * to allow people with any Google e-mail domain to sign up. Administrator access remains restricted to superadmins.", eyebrow: "ACCESS CONTROL", mode: "crud",
     columns: [{ name: "domain", label: "Domain" }, { name: "enabled", label: "Enabled" }, { name: "created_at", label: "Created" }],
-    fields: [{ name: "domain", label: "Domain", kind: "text", required: true, help: "Example: columbia.edu" }, { name: "enabled", label: "Enabled", kind: "checkbox" }],
+    fields: [{ name: "domain", label: "Domain", kind: "text", required: true, help: "Enter * for everyone, or a domain such as columbia.edu" }, { name: "enabled", label: "Enabled", kind: "checkbox" }],
   },
   {
     slug: "whitelisted-emails", table: "whitelisted_emails", title: "Whitelisted e-mail addresses", singular: "whitelisted e-mail",
