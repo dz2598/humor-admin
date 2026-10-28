@@ -29,7 +29,7 @@ button,input,textarea { font:inherit; }
 .primary-button:hover { background:var(--red); border-color:var(--red); }
 .secondary-button { background:transparent; }
 .danger-button { color:var(--red); border-color:#c4a49e; background:transparent; }
-.stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:22px; }
+.stats-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:22px; }
 .stats-grid article { min-height:160px; padding:20px; background:#fff; border:1px solid var(--line); display:flex; flex-direction:column; }
 .stats-grid span,.stats-grid small { color:var(--muted); font:11px ui-monospace,SFMono-Regular,Menlo,monospace; text-transform:uppercase; letter-spacing:.08em; }
 .stats-grid strong { font:500 46px/1 ui-monospace,SFMono-Regular,Menlo,monospace; margin:auto 0 8px; }

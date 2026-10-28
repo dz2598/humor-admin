@@ -5,6 +5,18 @@ import { requireAdmin } from "@/lib/auth";
 
 type Row = Record<string, unknown>;
 const value = (n: unknown) => typeof n === "number" ? n : Number(n) || 0;
+const newYorkDate = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "America/New_York",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
+function wasCreatedToday(row: Row) {
+  if (!row.created_at) return false;
+  const created = new Date(String(row.created_at));
+  return !Number.isNaN(created.getTime()) && newYorkDate.format(created) === newYorkDate.format(new Date());
+}
 
 export default async function Dashboard() {
   const { supabase, profile } = await requireAdmin();
@@ -28,6 +40,8 @@ export default async function Dashboard() {
   const averageEngagement = memeRows.length ? voteRows.length / memeRows.length : 0;
   const activeMemes = new Set(voteRows.map(v => String(v.meme_id))).size;
   const activeRate = memeRows.length ? Math.round(activeMemes / memeRows.length * 100) : 0;
+  const memesToday = memeRows.filter(wasCreatedToday).length;
+  const votesToday = voteRows.filter(wasCreatedToday).length;
   const name = [profile.first_name, profile.last_name].filter(Boolean).join(" ");
   return <AdminShell active="/" name={name}>
     <header className="page-header"><div><p className="eyebrow">LIVE DATABASE</p><h1>Archive overview</h1><p>Signals from the Campus LOL evidence collection.</p></div><Link className="primary-button" href="/memes/new">+ New meme record</Link></header>
@@ -36,6 +50,8 @@ export default async function Dashboard() {
       <article><span>Meme records</span><strong>{memeRows.length}</strong><small>stored evidence</small></article>
       <article><span>Avg. engagement / meme</span><strong>{averageEngagement.toFixed(1)}</strong><small>{voteRows.length} interactions across all memes</small></article>
       <article><span>Active memes</span><strong>{activeRate}%</strong><small>{activeMemes} of {memeRows.length} received interaction</small></article>
+      <article><span>Memes added today</span><strong>+{memesToday}</strong><small>new records since midnight ET</small></article>
+      <article><span>Votes added today</span><strong>+{votesToday}</strong><small>upvotes and downvotes combined</small></article>
     </section>
     <section className="dashboard-grid">
       <article className="panel"><div className="panel-heading"><div><p className="eyebrow">TOP SIGNAL</p><h2>Most approved evidence</h2></div><Link href="/votes">View vote log →</Link></div>
