@@ -7,7 +7,7 @@ export function MemeForm({ action, meme, submitLabel }: { action: (data: FormDat
   return <form action={action} className="editor-form">
     <AdminImageField defaultValue={meme?.image_url || ""} />
     <label>Caption<textarea required name="caption" rows={3} defaultValue={meme?.caption || ""} /></label>
-    <label>Original prompt<textarea name="prompt" rows={3} defaultValue={meme?.prompt || ""} /></label>
+    <label>Description <span>(recommended, but optional)</span><textarea name="prompt" rows={3} defaultValue={meme?.prompt || ""} /></label>
     <label>Explanation<textarea name="explanation" rows={4} defaultValue={meme?.explanation || ""} /></label>
     {!meme && <label>Creator user ID <span>(optional)</span><input name="user_id" defaultValue="" placeholder="Defaults to your administrator ID" /></label>}
     <div className="form-actions"><button className="primary-button" type="submit">{submitLabel}</button><Link className="secondary-button" href="/memes">Cancel</Link></div>
