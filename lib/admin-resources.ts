@@ -70,7 +70,7 @@ export const adminResources: AdminResource[] = [
   {
     slug: "llm-responses", table: "llm_responses", title: "LLM responses", singular: "LLM response",
     description: "Inspect latency, token usage, and output from model calls.", eyebrow: "READ ONLY", mode: "read",
-    columns: [{ name: "generation_request_id", label: "Request ID" }, { name: "model_id", label: "Model ID" }, { name: "response_text", label: "Response" }, { name: "latency_ms", label: "Latency ms" }, { name: "input_tokens", label: "Input tokens" }, { name: "output_tokens", label: "Output tokens" }, { name: "created_at", label: "Created" }], fields: [],
+    columns: [{ name: "generation_request_id", label: "Request ID" }, { name: "step_order", label: "Step" }, { name: "step_name", label: "Stage" }, { name: "model_id", label: "Model ID" }, { name: "response_text", label: "Response" }, { name: "latency_ms", label: "Latency ms" }, { name: "input_tokens", label: "Input tokens" }, { name: "output_tokens", label: "Output tokens" }, { name: "created_at", label: "Created" }], fields: [],
   },
   {
     slug: "signup-domains", table: "allowed_signup_domains", title: "Allowed signup domains", singular: "signup domain",
